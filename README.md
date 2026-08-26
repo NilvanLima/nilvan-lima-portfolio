@@ -1,6 +1,6 @@
 # MY QA Portfólio
 
-![QA Pipeline](https://github.com/NilvanLima//actions/
+![QA Pipeline](https://github.com/NilvanLima/nilvan-lima-portfolio/actions/
 workflows/qa-tests.yml/badge.svg)
 
 # What you will find here:
