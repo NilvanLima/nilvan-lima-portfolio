@@ -1,0 +1,26 @@
+name: QA Pipeline - Cypress Portfolio
+
+on:
+  push: { branches: [main]}
+  pull_request: { branches: [main]}
+
+jobs:
+  qa-tests:
+    name: Cypress Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm'}
+      - run: npm ci
+      - name: Execute Cypress tests
+        run: npx cypress run
+      - name: Upload screenshots/videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-report-${{ github.run_number }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 30
