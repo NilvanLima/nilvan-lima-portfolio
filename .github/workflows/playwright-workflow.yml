@@ -1,4 +1,4 @@
-name: QA Pipeline - Portfólio
+name: QA Pipeline - Playwright Portfolio
 
 on:
   push:
