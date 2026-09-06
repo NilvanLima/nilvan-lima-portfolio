@@ -1,0 +1,79 @@
+<div class="container products-page">
+  <div class="products-page__toolbar">
+    <input
+      type="search"
+      placeholder="Buscar produtos…"
+      [(ngModel)]="search"
+      (ngModelChange)="onSearchChange()"
+      data-testid="search-input"
+      class="products-page__search"
+    />
+
+    <div class="products-page__filters">
+      @for (cat of categories; track cat) {
+        <button
+          class="filter-chip"
+          [class.is-active]="category() === cat"
+          (click)="onCategoryChange(cat)"
+          [attr.data-testid]="'category-' + cat"
+        >
+          {{ cat }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p class="mono-tag" data-testid="products-loading">&gt; carregando produtos…</p>
+  } @else if (products().length === 0) {
+    <p data-testid="products-empty">Nenhum produto encontrado.</p>
+  } @else {
+    <div class="product-grid" data-testid="product-grid">
+      @for (product of products(); track product.id; let i= $index) {
+        <a
+          [routerLink]="['/products', product.id]"
+          class="card product-card"
+          [attr.data-testid]="'product-card-' + product.id"
+        >
+          <div class="product-card__image">
+            @if (product.stock === 0) {
+              <span class="badge badge--danger product-card__stock-badge" data-testid="out-of-stock-badge">
+                Esgotado
+              </span>
+            }
+          </div>
+          <div class="product-card__body">
+            <span class="mono-tag product-card__category">{{ product.category }}</span>
+            <h3>{{ product.name }}</h3>
+            <p class="price" data-testid="product-price">{{ product.price | number: '1.2-2' }}</p>
+            <button
+              class="btn btn--primary"
+              [disabled]="product.stock === 0"
+              (click)="addToCart(product, $event)"
+              [attr.data-testid]="'add-to-cart-btn' + i"
+            >
+              {{ product.stock === 0 ? 'Sem estoque' : 'Adicionar ao carrinho' }}
+            </button>
+          </div>
+        </a>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination" data-testid="pagination">
+        <button class="btn btn--ghost" (click)="goToPage(page() - 1)" [disabled]="page() === 1" data-testid="prev-page">
+          Anterior
+        </button>
+        <span class="mono-tag">página {{ page() }} / {{ totalPages() }}</span>
+        <button
+          class="btn btn--ghost"
+          (click)="goToPage(page() + 1)"
+          [disabled]="page() === totalPages()"
+          data-testid="next-page"
+        >
+          Próxima
+        </button>
+      </div>
+    }
+  }
+</div>

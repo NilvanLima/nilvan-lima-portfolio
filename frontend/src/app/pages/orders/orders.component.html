@@ -1,0 +1,42 @@
+<div class="container orders-page">
+  <h1>&gt; meus pedidos</h1>
+
+  @if (loading()) {
+    <p class="mono-tag">&gt; carregando pedidos…</p>
+  } @else if (orders().length === 0) {
+    <div class="card orders-empty" data-testid="orders-empty">
+      <p>Você ainda não fez nenhum pedido.</p>
+      <a routerLink="/" class="btn btn--primary">Ver produtos</a>
+    </div>
+  } @else {
+    <ul class="orders-list" data-cy="orders-list">
+      @for (order of orders(); track order.id) {
+        <li class="card order-card" [attr.data-cy]="'order-' + order.id">
+          <div class="order-card__header">
+            <div>
+              <span class="mono-tag order-card__id">#{{ order.id.slice(0, 8) }}</span>
+              <span class="order-card__date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <span class="badge" [ngClass]="statusBadgeClass(order.status)" data-testid="order-status">
+              {{ statusLabel(order.status) }}
+            </span>
+          </div>
+
+          <ul class="order-card__items">
+            @for (item of order.items; track item.id) {
+              <li>
+                <span class="mono-tag">x{{ item.quantity }}</span>
+                <span class="price">{{ item.unitPrice * item.quantity | number: '1.2-2' }}</span>
+              </li>
+            }
+          </ul>
+
+          <div class="order-card__total">
+            <span>Total</span>
+            <span class="price" data-cy="order-total">{{ order.total | number: '1.2-2' }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

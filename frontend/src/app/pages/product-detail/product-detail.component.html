@@ -1,0 +1,40 @@
+<div class="container detail-page">
+  @if (loading()) {
+    <p class="mono-tag">&gt; carregando produto…</p>
+  } @else if (notFound()) {
+    <div class="card detail-empty" data-cy="product-not-found">
+      <h2>Produto não encontrado</h2>
+      <p>Esse item pode ter sido removido.</p>
+      <a routerLink="/" class="btn btn--primary">Voltar aos produtos</a>
+    </div>
+  } @else if (product(); as p) {
+    <a routerLink="/" class="detail-back">&larr; Voltar</a>
+
+    <div class="detail-grid">
+      <div class="card detail-image"></div>
+
+      <div class="detail-info">
+        <span class="mono-tag product-card__category">{{ p.category }}</span>
+        <h1 data-cy="product-name">{{ p.name }}</h1>
+        <p class="price detail-price" data-cy="product-detail-price">{{ p.price | number: '1.2-2' }}</p>
+        <p class="detail-description">{{ p.description }}</p>
+
+        @if (p.stock === 0) {
+          <span class="badge badge--danger" data-cy="detail-out-of-stock">Sem estoque</span>
+        } @else {
+          <span class="badge badge--success" data-cy="detail-in-stock">{{ p.stock }} em estoque</span>
+
+          <div class="quantity-stepper" data-cy="quantity-stepper">
+            <button class="btn btn--ghost" (click)="changeQuantity(-1)" data-cy="quantity-decrease">−</button>
+            <span class="mono-tag" data-cy="quantity-value">{{ quantity() }}</span>
+            <button class="btn btn--ghost" (click)="changeQuantity(1)" data-cy="quantity-increase">+</button>
+          </div>
+
+          <button class="btn btn--primary detail-add-btn" (click)="addToCart()" data-cy="detail-add-to-cart">
+            Adicionar ao carrinho
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

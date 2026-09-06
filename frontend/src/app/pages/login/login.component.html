@@ -1,0 +1,44 @@
+<div class="auth-page">
+  <div class="card auth-card">
+    <p class="auth-card__eyebrow">&gt; auth/login</p>
+    <h1>Entrar</h1>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" data-testid="login-form">
+      <div class="form-field">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" formControlName="email" data-testid="login-email" autocomplete="email" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <p class="error-text">Informe um e-mail válido</p>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          data-testid="login-password"
+          autocomplete="current-password"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <p class="error-text">Senha é obrigatória</p>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="error-text" data-testid="login-error">{{ errorMessage() }}</p>
+      }
+
+      <button class="btn btn--primary" type="submit" [disabled]="loading()" data-testid="login-submit">
+        {{ loading() ? 'Entrando…' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p class="auth-card__hint">
+      Usuário de teste (seed): <strong>qa.tester&#64;example.com</strong> / <strong>Test&#64;1234</strong>
+    </p>
+
+    <p class="auth-card__footer">Não tem conta? <a routerLink="/register" data-testid="go-to-register">Criar conta</a></p>
+  </div>
+</div>

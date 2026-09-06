@@ -1,0 +1,110 @@
+.products-page {
+  padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+.products-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.products-page__search {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+
+  &:focus {
+    border-color: var(--color-accent);
+  }
+}
+
+.products-page__filters {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+
+  &.is-active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+  }
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-5);
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(20, 23, 31, 0.08);
+  }
+}
+
+.product-card__image {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(135deg, var(--color-accent-soft), var(--color-bg));
+}
+
+.product-card__stock-badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+
+.product-card__body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.product-card__category {
+  color: var(--color-accent);
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.product-card__body h3 {
+  font-size: 16px;
+  margin-bottom: var(--space-2);
+}
+
+.product-card__body .btn {
+  margin-top: var(--space-3);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+}

@@ -1,0 +1,29 @@
+<header class="header">
+  <div class="container header__inner">
+    <a routerLink="/" class="header__logo" data-testid="logo">
+      <span class="header__logo-mark">&gt;_</span>
+      QA <strong>Store</strong>
+    </a>
+
+    <nav class="header__nav">
+      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" data-testid="nav-products">
+        Produtos
+      </a>
+
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/orders" routerLinkActive="is-active" data-cy="nav-orders">Pedidos</a>
+        <a routerLink="/cart" routerLinkActive="is-active" class="header__cart" data-testid="nav-cart">
+          Carrinho
+          @if (cart.itemCount() > 0) {
+            <span class="badge badge--neutral" data-testid="cart-badge">{{ cart.itemCount() }}</span>
+          }
+        </a>
+        <span class="header__user mono-tag" data-testid="user-email">{{ auth.user()?.email }}</span>
+        <button class="btn btn--ghost" (click)="logout()" data-testid="logout-btn">Sair</button>
+      } @else {
+        <a routerLink="/login" class="btn btn--ghost" data-testid="nav-login">Entrar</a>
+        <a routerLink="/register" class="btn btn--primary" data-testid="nav-register">Criar conta</a>
+      }
+    </nav>
+  </div>
+</header>

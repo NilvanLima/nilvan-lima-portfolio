@@ -1,0 +1,48 @@
+<div class="auth-page">
+  <div class="card auth-card">
+    <p class="auth-card__eyebrow">&gt; auth/register</p>
+    <h1>Criar conta</h1>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" data-testid="register-form">
+      <div class="form-field">
+        <label for="name">Nome</label>
+        <input id="name" type="text" formControlName="name" data-testid="register-name" autocomplete="name" />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <p class="error-text">Nome deve ter ao menos 2 caracteres</p>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" formControlName="email" data-testid="register-email" autocomplete="email" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <p class="error-text">Informe um e-mail válido</p>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          data-testid="register-password"
+          autocomplete="new-password"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <p class="error-text">Senha deve ter ao menos 6 caracteres</p>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="error-text" data-testid="register-error">{{ errorMessage() }}</p>
+      }
+
+      <button class="btn btn--primary" type="submit" [disabled]="loading()" data-testid="register-submit">
+        {{ loading() ? 'Criando…' : 'Criar conta' }}
+      </button>
+    </form>
+
+    <p class="auth-card__footer">Já tem conta? <a routerLink="/login" data-testid="go-to-login">Entrar</a></p>
+  </div>
+</div>
