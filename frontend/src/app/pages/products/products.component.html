@@ -50,7 +50,7 @@
               class="btn btn--primary"
               [disabled]="product.stock === 0"
               (click)="addToCart(product, $event)"
-              [attr.data-testid]="'add-to-cart-btn' + i"
+              [attr.data-testid]="'add-to-cart-btn-' + i"
             >
               {{ product.stock === 0 ? 'Sem estoque' : 'Adicionar ao carrinho' }}
             </button>

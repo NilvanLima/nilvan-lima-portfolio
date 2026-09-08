@@ -2,26 +2,26 @@
   <h1>&gt; carrinho</h1>
 
   @if (cartService.items().length === 0) {
-    <div class="card cart-empty" data-cy="cart-empty">
+    <div class="card cart-empty" data-testid="cart-empty">
       <p>Seu carrinho está vazio.</p>
       <a routerLink="/" class="btn btn--primary">Ver produtos</a>
     </div>
   } @else {
     <div class="cart-layout">
-      <ul class="cart-list" data-cy="cart-list">
+      <ul class="cart-list" data-testid="cart-list">
         @for (item of cartService.items(); track item.id) {
-          <li class="card cart-item" [attr.data-cy]="'cart-item-' + item.productId">
+          <li class="card cart-item" [attr.data-testid]="'cart-item-' + item.productId">
             <div class="cart-item__info">
               <h3>{{ item.product.name }}</h3>
               <span class="mono-tag">{{ item.product.category }}</span>
             </div>
 
             <div class="cart-item__quantity">
-              <button class="btn btn--ghost" (click)="decrease(item)" [attr.data-cy]="'decrease-' + item.productId">
+              <button class="btn btn--ghost" (click)="decrease(item)" [attr.data-testid]="'decrease-' + item.productId">
                 −
               </button>
               <span class="mono-tag" [attr.data-cy]="'quantity-' + item.productId">{{ item.quantity }}</span>
-              <button class="btn btn--ghost" (click)="increase(item)" [attr.data-cy]="'increase-' + item.productId">
+              <button class="btn btn--ghost" (click)="increase(item)" [attr.data-testid]="'increase-' + item.productId">
                 +
               </button>
             </div>
@@ -31,7 +31,7 @@
             <button
               class="btn btn--danger"
               (click)="remove(item)"
-              [attr.data-cy]="'remove-' + item.productId"
+              [attr.data-testid]="'remove-' + item.productId"
             >
               Remover
             </button>
@@ -43,11 +43,11 @@
         <h2>Resumo</h2>
         <div class="cart-summary__row">
           <span>Itens</span>
-          <span class="mono-tag" data-cy="cart-item-count">{{ cartService.itemCount() }}</span>
+          <span class="mono-tag" data-testid="cart-item-count">{{ cartService.itemCount() }}</span>
         </div>
         <div class="cart-summary__row cart-summary__total">
           <span>Total</span>
-          <span class="price" data-cy="cart-total">{{ cartService.total() | number: '1.2-2' }}</span>
+          <span class="price" data-testid="cart-total">{{ cartService.total() | number: '1.2-2' }}</span>
         </div>
         <a routerLink="/checkout" class="btn btn--primary cart-summary__checkout" data-testid="go-to-checkout">
           Finalizar compra
