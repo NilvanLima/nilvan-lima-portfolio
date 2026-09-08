@@ -15,7 +15,7 @@ export default defineConfig({
     use: {
         baseURL: FRONTEND_URL,
         trace: 'on-first-retry',
-        headless: false,
+        headless: true,
     },
 
     projects: [
