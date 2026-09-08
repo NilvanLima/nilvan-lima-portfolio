@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { randomEmail } from "../fixtures/test-data";
 
-test.describe("Register feature", () => {
+test.describe("Register feature @smoke", () => {
     test("should register successfully", async ({ page }) => {
         await page.goto("/register");
 

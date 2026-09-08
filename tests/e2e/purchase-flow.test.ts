@@ -1,7 +1,7 @@
 import {test, expect} from "@playwright/test";
 import {seedUser} from "../fixtures/test-data";
 
-test.describe("registered user full journey", () => {
+test.describe("registered user full journey @regression", () => {
     test("registered user full journey", async ({ page }) => {
         await page.goto("/");
         await page.getByTestId("nav-login").click();

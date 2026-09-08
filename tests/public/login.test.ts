@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { seedUser } from "../fixtures/test-data";
 
-test.describe("Login feature", () => {
+test.describe("Login feature @smoke", () => {
     test("should login successfully", async ({ page }) => {
         await page.goto("/login");
 
