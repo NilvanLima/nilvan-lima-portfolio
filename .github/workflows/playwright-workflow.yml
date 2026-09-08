@@ -1,39 +1,139 @@
-name: QA Pipeline - Playwright Portfolio
+name: QA Pipeline - Playwright Pipeline Portfolio
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
+
+env:
+  DATABASE_URL: "file:./dev.db"
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  AUTH_RATE_LIMIT_MAX: "1000"
+  PORT: "3333"
+  BACKEND_URL: "http://localhost:3333"
+  FRONTEND_URL: "http://localhost:4200"
 
 jobs:
-  qa-tests:
-    name: Playwright Tests
+  smoke:
+    name: Smoke tests
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
 
-      - name: Setup Node 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install Dependencies
+      - name: install test dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install chromium firefox
+      - name: install backend dependencies
+        run: npm ci --prefix backend
 
-      - name: Execute tests
-        run: npx playwright test --reporter=html
+      - name: install frontend dependencies
+        run: npm ci --prefix frontend
 
-      - name: Upload Report
+      - name: setup database
+        working-directory: backend
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+          npx run seed
+
+      - name: start backend
+        working-directory: backend
+        run: npm run dev &
+
+      - name: start frontend
+        working-directory: frontend
+        run: npm start &
+
+      - name: wait for app to be ready
+        run: npx wait-on ${{ env.BACKEND_URL }}/health ${{ env.FRONTEND_URL }} --timeout 120000
+
+      - name: install playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: run smoke tests
+        run: npx playwright test --grep @smoke
+
+  api-tests:
+    name: API tests
+    needs: smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+
+      - run: npm ci
+      - run: npm ci --prefix backend
+
+      - name: Setup database
+        working-directory: backend
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+          npm run seed
+
+      - name: Start backend
+        working-directory: backend
+        run: npm run dev &
+
+      - name: Wait for API to be ready
+        run: npx wait-on ${{ env.BACKEND_URL }}/health --timeout 60000
+
+      - name: Run API tests
+        run: npm run test:api
+
+      - name: Upload API report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report-${{ github.run_number }}
+          name: api-report-${{ github.run_number }}
+          path: playwright-report/
+          retention-days: 30
+
+  e2e-regression:
+    name: Regression E2E
+    needs: [ smoke, api-tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+
+      - run: npm ci
+      - run: npm ci --prefix backend
+      - run: npm ci --prefix frontend
+
+      - name: Setup database
+        working-directory: backend
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+          npm run seed
+
+      - name: Start backend
+        working-directory: backend
+        run: npm run dev &
+
+      - name: Start frontend
+        working-directory: frontend
+        run: npm start &
+
+      - name: Wait for app to be ready
+        run: npx wait-on ${{ env.BACKEND_URL }}/health ${{ env.FRONTEND_URL }} --timeout 120000
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: Run regression tests
+        run: npx playwright test --grep @regression
+
+      - name: Upload regression report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-report-${{ github.run_number }}
           path: playwright-report/
           retention-days: 30
