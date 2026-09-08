@@ -29,6 +29,9 @@ jobs:
       - name: install backend dependencies
         run: npm ci --prefix backend
 
+      - name: DEBUG - list backend bin
+        run: ls -la backend/node_modules/.bin/ | grep tsx || echo "tsx NÃO encontrado em node_modules/.bin"
+
       - name: install frontend dependencies
         run: npm ci --prefix frontend
 
